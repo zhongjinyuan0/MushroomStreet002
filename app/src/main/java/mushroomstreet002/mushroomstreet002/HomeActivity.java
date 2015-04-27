@@ -34,6 +34,7 @@ public class HomeActivity extends ActionBarActivity implements ViewPager.OnPageC
         init();
 
 
+
     }
 
     public void init(){
