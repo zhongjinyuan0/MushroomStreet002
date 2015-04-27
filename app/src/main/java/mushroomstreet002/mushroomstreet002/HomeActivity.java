@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 
@@ -18,26 +20,37 @@ import fragment.PersonalCenterFragment;
 import fragment.SearchFragment;
 
 
-public class HomeActivity extends ActionBarActivity {
+public class HomeActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
 
     private ArrayList<Fragment> fragments;
+    private RadioGroup homePagerRadioGroup;
+    private ViewPager homePageViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ViewPager homePageViewPager = (ViewPager) findViewById(R.id.homePageViewPager);
+
+        init();
+
+
+    }
+
+    public void init(){
+        homePagerRadioGroup = (RadioGroup) findViewById(R.id.homePagerRadioGroup);
+        ((RadioButton) homePagerRadioGroup.getChildAt(0)).setChecked(true);
+        homePagerRadioGroup.setOnCheckedChangeListener(this);
+
+        homePageViewPager = (ViewPager) findViewById(R.id.homePageViewPager);
         fragments = new ArrayList<Fragment>();
         fragments.add(new HomeFragment());
         fragments.add(new SearchFragment());
         fragments.add(new MessageFragment());
         fragments.add(new PersonalCenterFragment());
-
         MyhomePageViewPagerAdapter myhomePageViewPagerAdapter = new MyhomePageViewPagerAdapter(getSupportFragmentManager());
         homePageViewPager.setAdapter(myhomePageViewPagerAdapter);
-
+        homePageViewPager.setOnPageChangeListener(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,7 +74,46 @@ public class HomeActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-     class MyhomePageViewPagerAdapter extends FragmentPagerAdapter{
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if(position<2){
+            RadioButton page=(RadioButton)homePagerRadioGroup.getChildAt(position);
+            page.setChecked(true);
+        }else {
+            RadioButton page=(RadioButton)homePagerRadioGroup.getChildAt(position+1);
+            page.setChecked(true);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.homeradioButton0:
+                homePageViewPager.setCurrentItem(0);
+                break;
+            case R.id.homeradioButton1:
+                homePageViewPager.setCurrentItem(1);
+                break;
+            case R.id.homeradioButton2:
+                homePageViewPager.setCurrentItem(2);
+                break;
+            case R.id.homeradioButton3:
+                homePageViewPager.setCurrentItem(3);
+                break;
+        }
+    }
+
+    class MyhomePageViewPagerAdapter extends FragmentPagerAdapter{
          public MyhomePageViewPagerAdapter(FragmentManager fm) {
              super(fm);
          }
